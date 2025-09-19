@@ -1,0 +1,31 @@
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: #ee4962; 
+  padding: 10px;
+}
+.line {
+  line-height: 100%;
+}
+
+.p-button-rounded {
+  margin: 0;
+}
+
+.bottom-menu Button { 
+  flex: 1;
+}
+
+.separator {
+  height: 3rem; /* Điều chỉnh chiều cao của đường kẻ */
+  border-left: 1px solid white; /* Màu sắc và chiều rộng của đường kẻ */
+  margin: 0 10px; /* Khoảng cách giữa đường kẻ và các nút */
+}
+
+.bottom-menu .pi {
+  font-size: 2rem;
+}
