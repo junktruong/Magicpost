@@ -1,12 +1,26 @@
+# Backend (NestJS)
 
-# How to run ??
+## Local development
 
-```typescript
-yarn // install
+```bash
+cp .env.example .env
+npm install
+npm run db:dev:up
+npm run prisma:dev:deploy
+npm run start:dev
+```
 
-// change url database : DATABASE_URL="postgresql://<username>:<password>@localhost:<Port of Database>/<Name Database>?schema=public"
+## Test database
 
-// npx prisma migrate deploy // deploy data module on database
-yarn db:dev:restart // start postgres in docker and push migrations
-yarn start:dev // start api in dev mode
+```bash
+npm run db:test:up
+npm run prisma:test:deploy
+```
+
+## Quality
+
+```bash
+npm run lint
+npm run typecheck
+npm run test
 ```

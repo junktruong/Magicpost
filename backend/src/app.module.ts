@@ -1,5 +1,6 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { validateEnv } from './config/env.validation';
 
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -14,6 +15,7 @@ import { OrderModule } from "./Order/order.module";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateEnv,
     }),
     AuthModule,
     UserModule,

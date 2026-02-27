@@ -1,5 +1,3 @@
-import Image from 'next/image'
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 import { Button } from 'primereact/button';     
 
 const Home = () => {

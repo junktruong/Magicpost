@@ -1,0 +1,23 @@
+# OS files
+.DS_Store
+
+# Dependencies
+**/node_modules/
+
+# Build outputs
+**/.next/
+**/dist/
+**/coverage/
+**/.turbo/
+
+# Logs
+**/*.log
+
+# Env files
+**/.env
+**/.env.*
+!**/.env.example
+
+# Editor
+.vscode/
+.idea/

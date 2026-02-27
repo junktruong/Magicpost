@@ -1,437 +1,175 @@
-import axios, { AxiosRequestConfig } from "axios";
-import * as dotenv from "dotenv";
+import { AxiosRequestConfig } from "axios";
+import { apiClient, getAccessToken } from "./apiClient";
 
-dotenv.config();
-
-const API_URL = "https://magicpost-183b.onrender.com";
-//const API_URL = "http://localhost:3333";
+type RequestPayload = Record<string, unknown>;
 
 export class BaseService {
-  // auth service ---------------------------------------------------------------------------------//
-  async login(formData: any) {
-    let axiosConfig: AxiosRequestConfig = {
+  private getAuthConfig(): AxiosRequestConfig {
+    const token = getAccessToken();
+
+    if (!token) {
+      return {};
+    }
+
+    return {
       headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": API_URL,
+        Authorization: `Bearer ${token}`,
       },
     };
-    console.log(formData);
+  }
 
-    const res = await axios.post(
-      `${API_URL}/auth/signin`,
+  // auth service
+  login(formData: RequestPayload) {
+    return apiClient.post("/auth/signin", formData);
+  }
+
+  getUser() {
+    return apiClient.get("/users/me", this.getAuthConfig());
+  }
+
+  // order service
+  getOrderById(orderId: string) {
+    return apiClient.get(`/order/order/${orderId}`, this.getAuthConfig());
+  }
+
+  createOrder(formData: RequestPayload) {
+    return apiClient.post("/order/add-order", formData, this.getAuthConfig());
+  }
+
+  // point service
+  getPointInProvinceById(orderId: string) {
+    return apiClient.get(`/order/order/${orderId}`, this.getAuthConfig());
+  }
+
+  getTransByProvinceId(proviceId: string) {
+    return apiClient.get(`/trans/province/${proviceId}`, this.getAuthConfig());
+  }
+
+  getHubsByProvinceId(proviceId: string) {
+    return apiClient.get(`/hub/province/${proviceId}`, this.getAuthConfig());
+  }
+
+  createTrans(formData: RequestPayload) {
+    return apiClient.post("/trans/add-trans", formData, this.getAuthConfig());
+  }
+
+  createHub(formData: RequestPayload) {
+    return apiClient.post("/hub/add-hub", formData, this.getAuthConfig());
+  }
+
+  getTransById(transId: string) {
+    return apiClient.get(`/trans/trans/${transId}`, this.getAuthConfig());
+  }
+
+  getHubsById(hubId: string) {
+    return apiClient.get(`/hub/hub/${hubId}`, this.getAuthConfig());
+  }
+
+  getUserOnPoint(pointId: string) {
+    return apiClient.get(`/users/user-on-point/${pointId}`, this.getAuthConfig());
+  }
+
+  addUserOnPoint(formData: RequestPayload) {
+    return apiClient.post("/users/add-auth", formData, this.getAuthConfig());
+  }
+
+  getAllUser(formData: RequestPayload) {
+    return apiClient.post("/users/get-all-users", formData, this.getAuthConfig());
+  }
+
+  createUser(formData: RequestPayload) {
+    return apiClient.post("/users/create-user", formData, this.getAuthConfig());
+  }
+
+  getAllOrder(formData: RequestPayload) {
+    return apiClient.post("/order/order", formData, this.getAuthConfig());
+  }
+
+  findOrderOnPoint(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/find-order-on-trans-hub",
       formData,
-      axiosConfig
-    );
-    return res;
-  }
-
-  async getUser() {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-
-    return await axios.get(`${API_URL}${"/users/me"}`, axiosConfig);
-  }
-
-  // auth service ---------------------------------------------------------------------------------//
-
-  // order service ---------------------------------------------------------------------------------//
-
-  async getOrderById(orderId: string) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-
-    return await axios.get(
-      `${API_URL}${"/order/order/"}${orderId}`,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async createOrder(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig: AxiosRequestConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": API_URL,
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    console.log(formData);
-
-    const res = await axios.post(
-      `${API_URL}/order/add-order`,
+  findOrderWaitOnTrans(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/find-order-wait-on-trans",
       formData,
-      axiosConfig
-    );
-    return res;
-  }
-
-  // order service ---------------------------------------------------------------------------------//
-
-  // point Service --------------------------------------------------------------------------------//
-
-  async getPointInProvinceById(orderId: string) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-
-    return await axios.get(
-      `${API_URL}${"/order/order/"}${orderId}`,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async getTransByProvinceId(proviceId: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.get(
-      `${API_URL}${"/trans/province/"}${proviceId}`,
-      axiosConfig
-    );
-  }
-
-  async getHubsByProvinceId(proviceId: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.get(
-      `${API_URL}${"/hub/province/"}${proviceId}`,
-      axiosConfig
-    );
-  }
-  async createTrans(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/trans/add-trans"}`,
+  findOrderMoveInPoint(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/find-order-from-trans-hub",
       formData,
-      axiosConfig
-    );
-  }
-  async createHub(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/hub/add-hub"}`,
-      formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async getTransById(transId: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.get(
-      `${API_URL}${"/trans/trans/"}${transId}`,
-      axiosConfig
+  findOrderMoveOutPoint(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/find-order-moving-trans-hub",
+      formData,
+      this.getAuthConfig(),
     );
   }
 
-  async getHubsById(hubId: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.get(`${API_URL}${"/hub/hub/"}${hubId}`, axiosConfig);
-  }
-
-  async getUserOnPoint(pointId: string) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.get(
-      `${API_URL}${"/users/user-on-point/"}${pointId}`,
-      axiosConfig
+  findOrderSuccessFailReturn(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/find-order-success-fail-return",
+      formData,
+      this.getAuthConfig(),
     );
   }
 
-  async addUserOnPoint(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/users/add-auth"}`,
+  confirmOrderOnTrans(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-on-trans",
       formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async getAllUser(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/users/get-all-users"}`,
+  confirmOrderFromTrans(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-from-trans",
       formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async createUser(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/users/create-user"}`,
+  confirmOrderOnHub(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-on-hub",
       formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async getAllOrder(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/order"}`,
+  confirmOrderFromHub(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-from-hub",
       formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-  async findOrderOnPoint(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/find-order-on-trans-hub"}`,
+  confirmOrderSuccessFail(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-success-fail",
       formData,
-      axiosConfig
-    );
-  }
-  async findOrderWaitOnTrans(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/find-order-wait-on-trans"}`,
-      formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 
-
-  async findOrderMoveInPoint(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/find-order-from-trans-hub"}`,
+  confirmOrderFailOnTrans(formData: RequestPayload) {
+    return apiClient.post(
+      "/order/confirm-order-fail-on-trans",
       formData,
-      axiosConfig
-    );
-  }
-
-  async findOrderMoveOutPoint(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/find-order-moving-trans-hub"}`,
-      formData,
-      axiosConfig
-    );
-  }
-
-  async findOrderSuccessFailReturn(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/find-order-success-fail-return"}`,
-      formData,
-      axiosConfig
-    );
-  }
-  async confirmOrderOnTrans(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-on-trans"}`,
-      formData,
-      axiosConfig
-    );
-  }
-  async confirmOrderFromTrans(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-from-trans"}`,
-      formData,
-      axiosConfig
-    );
-  }
-  async confirmOrderOnHub(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-on-hub"}`,
-      formData,
-      axiosConfig
-    );
-  }
-  async confirmOrderFromHub(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-from-hub"}`,
-      formData,
-      axiosConfig
-    );
-  }
-
-  async confirmOrderSuccessFail(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-success-fail"}`,
-      formData,
-      axiosConfig
-    );
-  }
-
-  async confirmOrderFailOnTrans(formData: any) {
-    const bearver = window.localStorage.getItem("access_token");
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${bearver}`,
-      },
-    };
-    return await axios.post(
-      `${API_URL}${"/order/confirm-order-fail-on-trans"}`,
-      formData,
-      axiosConfig
+      this.getAuthConfig(),
     );
   }
 }

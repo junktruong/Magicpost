@@ -5,7 +5,6 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import * as Yup from "yup";
 import "./style.css";
-import axios from "axios";
 import { BaseService } from "../service/BaseService";
 import { Dropdown } from "primereact/dropdown";
 import { PROVINCE_ENUM, CITY_DISTRICT_ENUM } from "@/public/utils/Utils";
@@ -62,31 +61,12 @@ const validationSchema = Yup.object().shape({
   typeGoods: Yup.string().required("Type Goods is required"),
 });
 
-const loginEndpoint = "https://magicpost-60b7.onrender.com/order/add-order";
-const access_token = "";
-async function request(values: any) {
-  try {
-    let response = await axios.post(loginEndpoint, values, {
-      headers: {
-        authorization: `Bearer ${access_token}`,
-      },
-    });
-    console.log(response);
-    console.log("Data posted successfully:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error posting data:", error);
-    throw error;
-  }
-}
-
 const handleSubmit = async (values: any) => {
   const baseService = new BaseService();
   try {
-    const createOrder = await baseService.createOrder(values);
-    console.log(createOrder);
+    await baseService.createOrder(values);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

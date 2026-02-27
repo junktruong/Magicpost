@@ -1,5 +1,4 @@
 {
-  "proxy": "https://magicpost-60b7.onrender.com",
   "name": "next-magicpost",
   "version": "0.1.0",
   "private": true,
@@ -7,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

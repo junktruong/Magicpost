@@ -77,12 +77,6 @@ const LogIn = () => {
       return;
     }
 
-    // Handle form submission logic here
-    console.log('Email:', emailValue);
-    console.log('Password:', passwordValue);
-
-    // call api 
-
     const formLogin: any = {
       email: emailValue,
       password: passwordValue,

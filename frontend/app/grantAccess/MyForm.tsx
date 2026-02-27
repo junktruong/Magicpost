@@ -9,7 +9,6 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import "./MyForm.css"
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { BaseService } from '../service/BaseService';
 
@@ -43,14 +42,10 @@ const roleId = [
   { value: 521, label: 'hub staff' },
 ];
 
-// const loginEndpoint = "https://magicpost-60b7.onrender.com/users/create-user";
-// const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiaHV5bmhuaHVAZ21haWwuY29tIiwiaWF0IjoxNzAyMDMwMjY5LCJleHAiOjE3MDIwMzM4Njl9.CjqnshRVtUKp4P8-PcbwfFexePrTUc4yNLoUDaKiTCQ";
-
 async function request(values: any) {
   const baseService = new BaseService();
   try {
-    let res = await baseService.createUser(values)
-    console.log(res);
+    const res = await baseService.createUser(values)
     if (res.status == 201) {
       Swal.fire({
         title: "Good job!",
@@ -58,7 +53,7 @@ async function request(values: any) {
         icon: "success"
       });
     }
-  } catch (error:any) {
+  } catch (error: any) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -69,13 +64,7 @@ async function request(values: any) {
 
 export default function MyForm() {
   const handleSubmit = (values: any,) => {
-    // Gửi dữ liệu nếu hợp lệ
-    console.log('Form submitted:', values);
-
-    //Dùng axios để gọi API
     request(values);
-
-    // setSubmitting(false);
   };
 
   return (
@@ -154,4 +143,3 @@ export default function MyForm() {
     </Formik>
   );
 };
-
